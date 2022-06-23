@@ -1,35 +1,48 @@
+//Importing modules
 const Handlebars = require("handlebars");
+const constants=require("./constants");
 
-var sender={
-    id: '1230',
-    name: 'SUNIL',
-    receiverid: '1232',
-   };
+//Calling when task assigned and notification sent to the same person
+modularizeData(constants.sender,constants.activeReceivers,constants.activeReceivers);
 
-var activeReceivers= {
-     id: '1231', 
-     name : 'PRADUMN'
-    };
+//Calling when task assigned and notification sent are to different person
+modularizeData(constants.sender,constants.activeReceivers,constants.passiveReceivers);
 
-var passiveReceivers= [
-    {
-        id: '1232',
-        name: 'Rajdip'
-    },
 
-    {
-        id: '1233',
-        name: 'Suman'
-    } 
-]
 
-var Receiver= (activeReceivers.id==sender.receiverid)?"you":activeReceivers.name;
+//Moudlarizing data received and generating templates based on same
+function modularizeData(sender,activeReceivers,notifyListner)
  
+{
 
-const template = Handlebars.compile("{{SENDER}} has assigned a task to {{RECEIVER}}");
+    //for active receiver
+    if(activeReceivers.id==notifyListner.id)
+      {
+    generateTemplate(sender,"YOu");
+         }
+    else
+      {
+    //for passive listners
+       for (const x of notifyListner)
+        {
+              generateTemplate(sender,activeReceivers.name);
+           }
+       }
+    
+    }
 
-var notificationText=template({ SENDER :sender.name , RECEIVER : Receiver });
 
-console.log(notificationText);
+//Function to generate templates and print out notification text
+function generateTemplate( sender ,Receiver ){
+
+    const template = Handlebars.compile("{{SENDER}} has assigned a task to {{RECEIVER}}");
+    
+    var notificationText=template({ SENDER :sender.name , RECEIVER : Receiver });
+    
+    console.log(notificationText);
+
+}
+
+
 
 
